@@ -26,38 +26,26 @@ public class Product {
     public  double getPrice() { return  price.get(); }
 
     public static ObservableList<Product> getAllProducts(){
-        DatabaseConnection dbCon = new DatabaseConnection();
-        ObservableList<Product> data = FXCollections.observableArrayList();
         String selectProducts = "SELECT * FROM product";
-        try{
-            ResultSet rs =  dbCon.getQueryTable(selectProducts);
-            while(rs.next()){
-                data.add(new Product(rs.getInt("pid"), rs.getString("name"), rs.getDouble("price")));
-                System.out.println(rs.getInt("pid") + " " +
-                        rs.getString("name") + " " +
-                        rs.getDouble("price")
-                );
-            }
-            rs.close();
-
-        }catch (Exception e){
-            throw new RuntimeException(e);
-        }
-        return data;
+        return getProductList(selectProducts);
     }
 
     public static ObservableList<Product> getProductsByName(String productName){
+        String selectProducts = String.format("SELECT * FROM product WHERE name like '%%%s%%'", productName.toLowerCase());
+        return  getProductList(selectProducts);
+    }
+
+    private static ObservableList<Product> getProductList(String query){
         DatabaseConnection dbCon = new DatabaseConnection();
         ObservableList<Product> data = FXCollections.observableArrayList();
-        String selectProducts = String.format("SELECT * FROM product WHERE name like '%%%s%%'", productName.toLowerCase());
         try{
-            ResultSet rs =  dbCon.getQueryTable(selectProducts);
+            ResultSet rs =  dbCon.getQueryTable(query);
             while(rs.next()){
                 data.add(new Product(rs.getInt("pid"), rs.getString("name"), rs.getDouble("price")));
-                System.out.println(rs.getInt("pid") + " " +
-                        rs.getString("name") + " " +
-                        rs.getDouble("price")
-                );
+//                System.out.println(rs.getInt("pid") + " " +
+//                        rs.getString("name") + " " +
+//                        rs.getDouble("price")
+//                );
             }
             rs.close();
 
@@ -66,5 +54,7 @@ public class Product {
         }
         return data;
     }
+
+
 
 }
