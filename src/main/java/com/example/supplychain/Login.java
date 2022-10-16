@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
-import java.sql.SQLOutput;
 
 public class Login {
 
@@ -15,7 +14,7 @@ public class Login {
         return md.digest(input.getBytes(StandardCharsets.UTF_8));
     }
 
-    static String getEncriptedPassword(String passwordText) throws NoSuchAlgorithmException {
+    static String getEncryptedPassword(String passwordText) throws NoSuchAlgorithmException {
         try{
             BigInteger number = new BigInteger(1, getSHA(passwordText));
 
@@ -28,10 +27,10 @@ public class Login {
         return "";
     }
 
-    public static boolean customerLogin(String email, String password) throws NoSuchAlgorithmException {
+    public static boolean customerLogin(String email, String password)  {
         try{
             DatabaseConnection dbCon = new DatabaseConnection();
-            String encryptedPassword = getEncriptedPassword(password);
+            String encryptedPassword = getEncryptedPassword(password);
             String query = String.format("SELECT * FROM customer WHERE email = '%s' AND password = '%s' ", email,encryptedPassword);
             ResultSet rs = dbCon.getQueryTable(query);
             if(rs.next()){

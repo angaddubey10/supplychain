@@ -96,4 +96,12 @@ public class ProductDetails {
         }
     }
 
+    public int getProductId(){
+        Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
+        if(selectedProduct!=null){
+           return selectedProduct.getId();
+        }
+        return -1;
+    }
+
 }
